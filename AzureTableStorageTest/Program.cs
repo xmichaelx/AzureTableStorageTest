@@ -12,6 +12,7 @@ namespace AzureTableStorageTest
             var accountName = args[0];
             var accountKey = args[1];
             var size = int.Parse(args[2]);
+            const int batchSize = 100; 
             using (var wrapper = new Wrapper(accountName, accountKey))
             {
                 // generate test data entities
@@ -23,7 +24,7 @@ namespace AzureTableStorageTest
                 timer.Restart();
                 wrapper.AddBatch(testData);
                 timer.Stop();
-                Console.WriteLine($"Data upload elapsed {timer.Elapsed} s - {100 * timer.ElapsedMilliseconds / size} ms per batch request");
+                Console.WriteLine($"Data upload elapsed {timer.Elapsed} s - {timer.ElapsedMilliseconds / (size/ batchSize)} ms per batch request");
                 // querying
 
 
@@ -32,7 +33,7 @@ namespace AzureTableStorageTest
                 timer.Restart();
                 wrapper.DeleteItemsOlderThan(DateTimeOffset.UtcNow);
                 timer.Stop();
-                Console.WriteLine($"Data delete elapsed {timer.Elapsed} s - {100 * timer.ElapsedMilliseconds / size} ms per batch request");
+                Console.WriteLine($"Data delete elapsed {timer.Elapsed} s - {timer.ElapsedMilliseconds / (size / batchSize)} ms per batch request");
             }
         }
     }
